@@ -1,3 +1,14 @@
 from django.shortcuts import render
+from blogs.models import Category,Blog
 def home(req):
-    return render(req,'home.html')
+    # get all the category from db
+  
+    featured_posts=Blog.objects.filter(is_featured=True,status="Published")
+    posts=Blog.objects.filter(is_featured=False,status="Published")
+   
+    context={
+        
+        'featured_posts':featured_posts,
+        'posts':posts
+    }
+    return render(req,'home.html',context)
