@@ -13,10 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1u+39$n=o+o07+qbmo$egqh#z8v+5*0qozk$*$8$y1(x6-a$^t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-# to make 404 page work we need to set this up false else it wont work
-# make work in all host
-ALLOWED_HOSTS = ['*']
+DEBUG = True
+
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -28,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blogs'
+    'blogs',
+    'assignments'
 ]
 
 MIDDLEWARE = [
@@ -54,6 +54,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'blogs.context_processors.get_categories',
+                'blogs.context_processors.get_social_links'
             ],
         },
     },
@@ -107,12 +108,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
-# folder where django put all the stati files
-STATIC_ROOT=BASE_DIR /'static'
-# other place where your satic filer are stored
+STATIC_URL = '/static/'
+# folder where django put all the stati files production
+STATIC_ROOT=BASE_DIR /'staticFiles'
+# other place where your satic filer are stored devevlopemet
 STATICFILES_DIRS=[
-    'blog_main/static'
+    BASE_DIR /'static'
 ]
 
 MEDIA_URL='/media/'

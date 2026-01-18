@@ -1,6 +1,8 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
 from .models  import Blog,Category
+from django.db.models import Q
+
 
 
 
@@ -25,3 +27,23 @@ def posts_by_category(req,category_id):
     }
 
     return render(req,'posts_by_category.html',context)
+
+def blogs(req,slug):
+    single_blog=get_object_or_404(Blog,slug=slug,status='Published')
+    context={
+        'single_blog':single_blog
+    }
+    return render(req,'blogs.html',context)
+
+
+def search(req):
+    keyword=req.GET.get('keyword')
+    # match the keyword with blogs we will show the blog
+    # also check the blog description and blog_body
+    # we need to import Q so that we can do the or operator
+    blogs=Blog.objects.filter(Q(title__icontains=keyword) | Q(short_description__icontains=keyword) | Q(blog_body__icontains=keyword),status='Published')
+    context={
+        'blogs':blogs,
+        'keyword':keyword
+    }
+    return render(req,'search.html',context)
