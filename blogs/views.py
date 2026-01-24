@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from django.http import HttpResponse
-from .models  import Blog,Category
+from django.http import HttpResponseRedirect
+from .models  import Blog,Category,Comment
 from django.db.models import Q
 
 
@@ -29,9 +29,30 @@ def posts_by_category(req,category_id):
     return render(req,'posts_by_category.html',context)
 
 def blogs(req,slug):
+ 
     single_blog=get_object_or_404(Blog,slug=slug,status='Published')
+    if req.method=='POST':
+        # initialized user
+        comment=Comment()
+        comment.user=req.user
+        comment.blog=single_blog
+        comment.comment=req.POST['comments']
+        comment.save()
+        # redirect to the same page so we user http instead of redirect
+        # path_info will take to page where u came from
+        return HttpResponseRedirect(req.path_info)
+
+
+    # comments
+    comments=Comment.objects.filter(blog=single_blog)
+    comment_count=comments.count()
+
+   
     context={
-        'single_blog':single_blog
+        'single_blog':single_blog,
+        'comments':comments,
+        'comment_count':comment_count
+
     }
     return render(req,'blogs.html',context)
 
